@@ -1,12 +1,13 @@
 <template>
-    <div class="search-container">
+    <label for="searchbar">Search for a Recipe:</label>
+    <div class="search__container">
         <input class="search" type="text" name="searchbar" placeholder="Search by name..." v-model="searchTerm" @keyup="debouncedSearch">
-        <svg xmlns="http://www.w3.org/2000/svg" class="search-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="search__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
     </div>
 
-    <div class="recipe-cards-container" v-if="recipes">
+    <div class="recipe-card__container" v-if="recipes && recipes.length > 0">
         <div class="recipe-card" v-for="recipe in recipes">
             <img class="recipe-card__image" :src="recipe.recipe.image" :alt="recipe.recipe.label">
             <div class="recipe-card__details">
@@ -18,6 +19,10 @@
                 <p><span class="recipe-card__label -diet" v-for="dietLabel in recipe.recipe.dietLabels">{{ dietLabel }}</span></p>
             </div>
         </div>
+    </div>
+
+    <div class="search__no-results" v-if="recipes.length === 0">
+        No Results Found...
     </div>
 
     <Loader v-if="loading" />
@@ -64,8 +69,6 @@ export default {
             });
 
             this.recipes = res.data.hits;
-            console.log(this.recipes);
-
             this.loading = false;
         }
     }
@@ -76,13 +79,14 @@ export default {
     .recipe-card {
         display: flex;
         flex-direction: column;
-        width: 100%;
-        margin: 1rem 0;
+        max-width: 300px;
+        margin: 1.25rem auto;
         box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
         border-radius: 5px;
 
         @media only screen and (min-width: 768px) {
             flex-direction: row;
+            max-width: none;
         }
 
         &:hover {
@@ -93,11 +97,12 @@ export default {
             width: 100%;
             height: 300px;
             display: inline-block;
-            border-radius: 5px 0 0 5px;
+            border-radius: 5px 5px 0 0;
 
             @media only screen and (min-width: 768px) {
                 width: 300px;
                 height: auto;
+                border-radius: 5px 0 0 5px;
             }
         }
 
@@ -118,30 +123,35 @@ export default {
                 color: black;
             }
         }
-    }
 
-    .recipe-card__details {
-        padding: 0 1em;
-        flex: 1;
-    }
-
-    .search-container {
-        margin: 0.5rem 0;
-        position: relative;
+        &__details {
+            padding: 0 1em;
+            flex: 1;
+        }
     }
 
     .search {
         width: 100%;
-        padding: 0.5rem 0.5rem 0.5rem 2.5rem;
+        padding: 0.5rem 0.5rem 0.5rem 2rem;
         border-radius: 4pt;
         border: 1px solid grey;
-    }
 
-    .search-icon {
-        position: absolute;
-        top: 0;
-        left: 0.5rem;
-        height: 2rem;
-        width: 1rem;
+        &__container {
+            margin: 0.5rem 0;
+            position: relative;
+        }
+
+        &__icon {
+            position: absolute;
+            top: 0;
+            left: 0.5rem;
+            height: 2rem;
+            width: 1rem;
+        }
+
+        &__no-results {
+            margin-top: 1rem;
+            margin-left: 1rem;
+        }
     }
 </style>
