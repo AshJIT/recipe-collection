@@ -3,7 +3,7 @@
         <div class="recipe__container -top">
             <div class="recipe__preview">
                 <img class="recipe__image" :src="recipe.image" :alt="recipe.label">
-                <button class="bookmark__button">
+                <button class="bookmark__button" @click="addBookmark(recipe)">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                     </svg>
@@ -57,6 +57,8 @@
 import Loader from "../components/Loader.vue";
 import Label from "../components/Label.vue";
 import axios from "axios";
+import { createNamespacedHelpers } from "vuex";
+const { mapActions } = createNamespacedHelpers("bookmarks");
 
 export default {
     components: {
@@ -85,11 +87,13 @@ export default {
                 }
             });
 
-            console.log(res.data);
-
             this.recipe = res.data.recipe;
             this.loading = false;
-        }
+        },
+
+        ...mapActions([
+            "addBookmark",
+        ]),
     }
 }
 </script>
@@ -151,30 +155,6 @@ export default {
 
             &-container {
                 max-width: 40rem;
-            }
-        }
-    }
-
-    .bookmark {
-        &__button {
-            background: none;
-            border: none;
-            padding: 1rem 0;
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            cursor: pointer;
-            transition: transform 0.1s ease;
-            font-size: 1em;
-
-            svg {
-                width: 25px;
-                height: 25px;
-                fill: red;
-            }
-
-            &:hover {
-                transform: scale(1.1);
             }
         }
     }

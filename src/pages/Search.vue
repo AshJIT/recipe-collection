@@ -1,14 +1,14 @@
 <template>
     <label for="searchbar">Search for a Recipe:</label>
     <div class="search__container">
-        <input class="search" type="text" name="searchbar" placeholder="Search by name..." v-model="searchTerm" @keyup="debouncedSearch">
+        <input class="search" type="text" name="searchbar" placeholder="Search by name..." :value="searchTerm" @keyup="debouncedSearch">
         <svg xmlns="http://www.w3.org/2000/svg" class="search__icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
     </div>
 
     <div class="recipe-card__container" v-if="recipes && recipes?.length > 0">
-        <RecipeCard v-for="recipe in recipes" :recipe="recipe" :key="recipe.id" />
+        <RecipeCard v-for="(recipe, index) in recipes" :recipe="recipe.recipe" :key="index" />
     </div>
 
     <div class="search__no-results" v-if="recipes !== null && recipes?.length === 0">
@@ -23,6 +23,8 @@ import axios from "axios";
 import { debounce } from "lodash";
 import Loader from "../components/Loader.vue";
 import RecipeCard from "../components/RecipeCard.vue";
+import { createNamespacedHelpers } from "vuex";
+const { mapState, mapActions } = createNamespacedHelpers("search");
 
 export default {
     components: {
@@ -33,14 +35,19 @@ export default {
     data: function() {
         return {
             loading: false,
-            searchTerm: null,
-            recipes: null,
         }
+    },
+
+    computed: {
+        ...mapState({
+            searchTerm: state => state.searchTerm,
+            recipes: state => state.searchResults,
+        })
     },
 
     created: function() {
         this.debouncedSearch = debounce(event => {
-            this.doSearch();
+            this.doSearch(event);
         }, 500);
     },
 
@@ -49,9 +56,10 @@ export default {
     },
 
     methods: {
-        doSearch: async function() {
+        doSearch: async function(e) {
             this.loading = true;
             this.recipes = null;
+            this.setSearchTerm(e.target.value);
 
             const res = await axios({
                 method: "get",
@@ -61,9 +69,14 @@ export default {
                 }
             });
 
-            this.recipes = res.data.hits;
+            this.addSearchResults(res.data.hits);
             this.loading = false;
-        }
+        },
+
+        ...mapActions([
+            "setSearchTerm",
+            "addSearchResults"
+        ])
     }
 }
 </script>

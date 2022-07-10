@@ -1,13 +1,13 @@
 <template>
     <router-link class="recipe-card" :to="{ path: `/recipe/${id}` }">
-        <img class="recipe-card__image" :src="recipe.recipe.image" :alt="recipe.recipe.label">
+        <img class="recipe-card__image" :src="recipe.image" :alt="recipe.label">
         <div class="recipe-card__details">
-            <h2>{{ recipe.recipe.label }}</h2>
-            <p><strong>Calories:</strong> {{ recipe.recipe.calories ? (Math.round(recipe.recipe.calories * 100) / 100) : '' }}</p>
-            <p v-if="recipe.recipe.healthLabels.length > 0"><strong>Health Labels:</strong></p>
-            <p><Label v-for="healthLabel in recipe.recipe.healthLabels" :text="healthLabel" bg="dodgerblue" color="white" /></p>
-            <p v-if="recipe.recipe.dietLabels.length > 0"><strong>Diet Labels:</strong></p>
-            <p><Label v-for="dietLabel in recipe.recipe.dietLabels" :text="dietLabel" bg="#AFE1AF" color="black" /></p>
+            <h2>{{ recipe.label }}</h2>
+            <p><strong>Calories:</strong> {{ recipe.calories ? (Math.round(recipe.calories * 100) / 100) : '' }}</p>
+            <p v-if="recipe.healthLabels.length > 0"><strong>Health Labels:</strong></p>
+            <p><Label v-for="healthLabel in recipe.healthLabels" :text="healthLabel" bg="dodgerblue" color="white" /></p>
+            <p v-if="recipe.dietLabels.length > 0"><strong>Diet Labels:</strong></p>
+            <p><Label v-for="dietLabel in recipe.dietLabels" :text="dietLabel" bg="#AFE1AF" color="black" /></p>
         </div>
     </router-link>
 </template>
@@ -29,7 +29,7 @@ export default {
 
     computed: {
         id: function() {
-            return this.recipe.recipe.uri.split("#recipe_").pop();
+            return this.recipe.uri.split("#recipe_").pop();
         }
     }
 }
