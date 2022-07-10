@@ -1,8 +1,9 @@
-import { createApp } from "vue"
-import App from "./App.vue"
-import axios from "axios"
+import { createApp } from "vue";
+import App from "./App.vue";
+import axios from "axios";
+import router from "./router";
 
-axios.defaults.baseURL = "api";
+axios.defaults.baseURL = "/api/";
 
 axios.interceptors.request.use((config) => {
     config.params = config.params || {};
@@ -12,4 +13,4 @@ axios.interceptors.request.use((config) => {
     return config;
 });
 
-createApp(App).mount("#app")
+createApp(App).use(router).mount("#app");

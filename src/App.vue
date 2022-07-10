@@ -1,6 +1,6 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import Search from './components/Search.vue'
+import Search from './pages/Search.vue'
+import Menu from './components/Menu.vue'
 </script>
 
 <template>
@@ -15,7 +15,8 @@ import Search from './components/Search.vue'
   </div>
 
   <div class="content">
-    <Search />
+    <Menu />
+    <router-view />
   </div>
 
 </template>
