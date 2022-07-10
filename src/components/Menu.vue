@@ -1,11 +1,13 @@
 <template>
     <nav class="navigation__container">
         <ul class="navigation" role="tablist">
-            <li class="navigation__tab" v-for="tab in menuItems">
-                <a class="navigation__link" :class="tab.current ? '-active' : ''" aria-controls="search" :aria-selected="tab.current" role="tab" href="">
-                    {{ tab.name }}
-                </a>
-            </li>
+            <router-link :to="{ path: tab.link }" v-slot="{ isActive, navigate, href }" v-for="tab in menuItems" custom>
+                <li class="navigation__tab">
+                    <a class="navigation__link" :class="isActive ? '-active' : ''" :aria-selected="isActive" role="tab" :href="href" @click="navigate">
+                        {{ tab.name }}
+                    </a>
+                </li>
+            </router-link>
         </ul>
     </nav>
 </template>
@@ -17,11 +19,11 @@ export default {
             menuItems: [
                 {
                     name: "Search",
-                    current: true,
+                    link: "/",
                 },
                 {
                     name: "Bookmarks",
-                    current: false,
+                    link: "/bookmarks",
                 }
             ]
         }

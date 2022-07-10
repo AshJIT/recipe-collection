@@ -3,7 +3,7 @@
         <div class="recipe__container -top">
             <div class="recipe__preview">
                 <img class="recipe__image" :src="recipe.image" :alt="recipe.label">
-                <button class="bookmark__button" v-if="!bookmarked">
+                <button class="bookmark__button">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                     </svg>
@@ -71,10 +71,6 @@ export default {
         }
     },
 
-    computed: {
-
-    },
-
     mounted() {
         this.getRecipe();
     },
@@ -108,10 +104,6 @@ export default {
                 @media only screen and (min-width: 768px) {
                     flex-direction: row;
                 }
-            }
-
-            &.-bottom {
-
             }
         }
 
