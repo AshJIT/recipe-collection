@@ -3,6 +3,10 @@ const searchActions = {
         context.commit("addSearchResults", recipes);
     },
 
+    removeSearchResults(context) {
+        context.commit("removeSearchResults");
+    },
+
     setSearchTerm(context, term) {
         context.commit("setSearchTerm", term);
     },

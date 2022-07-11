@@ -7,8 +7,8 @@ const searchModule = {
 
     state() {
       return {
-        searchResults: [],
-        searchTerm: null,
+        searchResults: localStorage.getItem("search") ? JSON.parse(localStorage.getItem("search")).searchResults : [],
+        searchTerm: localStorage.getItem("search") ? JSON.parse(localStorage.getItem("search")).searchTerm : null
       }
     },
 

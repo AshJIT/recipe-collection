@@ -7,7 +7,7 @@ const bookmarkModule = {
 
     state() {
       return {
-        bookmarkedRecipes: [],
+        bookmarkedRecipes: localStorage.getItem("bookmarks") ? JSON.parse(localStorage.getItem("bookmarks")).bookmarkedRecipes : [],
       }
     },
 

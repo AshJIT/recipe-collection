@@ -3,12 +3,21 @@
         <div class="recipe__container -top">
             <div class="recipe__preview">
                 <img class="recipe__image" :src="recipe.image" :alt="recipe.label">
-                <button class="bookmark__button" @click="addBookmark(recipe)">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <button class="recipe__bookmark-button" @click="addBookmark(recipe)" v-if="!savedRecipe">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M5 4a2 2 0 012-2h6a2 2 0 012 2v14l-5-2.5L5 18V4z" />
                     </svg>
-                    <span class="bookmark__button-text">Bookmark this recipe!</span>
+
+                    <span class="recipe__bookmark-button-text">Bookmark this recipe!</span>
                 </button>
+
+                <div class="recipe__bookmarked" v-if="savedRecipe">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+
+                    <span>This recipe is already bookmarked!</span>
+                </div>
             </div>
 
             <div class="recipe__details">
@@ -58,7 +67,7 @@ import Loader from "../components/Loader.vue";
 import Label from "../components/Label.vue";
 import axios from "axios";
 import { createNamespacedHelpers } from "vuex";
-const { mapActions } = createNamespacedHelpers("bookmarks");
+const { mapActions, mapState } = createNamespacedHelpers("bookmarks");
 
 export default {
     components: {
@@ -73,22 +82,36 @@ export default {
         }
     },
 
+    computed: {
+        ...mapState({
+            bookmarks: state => state.bookmarkedRecipes,
+        }),
+
+        savedRecipe: function() {
+            return this.bookmarks.find(bookmark => bookmark.uri === this.recipe.uri);
+        }
+    },
+
     mounted() {
         this.getRecipe();
     },
 
     methods: {
         getRecipe: async function() {
-            const res = await axios({
-                method: "get",
-                url: `/api/recipes/v2/${this.$route.params.id}`,
-                params: {
-                    q: this.searchTerm,
-                }
-            });
+            try {
+                const res = await axios({
+                    method: "get",
+                    url: `/api/recipes/v2/${this.$route.params.id}`,
+                    params: {
+                        q: this.searchTerm,
+                    }
+                });
 
-            this.recipe = res.data.recipe;
-            this.loading = false;
+                this.recipe = res.data.recipe;
+                this.loading = false;
+            } catch(e) {
+                console.error(e);
+            }
         },
 
         ...mapActions([
@@ -155,6 +178,44 @@ export default {
 
             &-container {
                 max-width: 40rem;
+            }
+        }
+
+        &__bookmark-button {
+            background: none;
+            border: none;
+            padding: 0.5rem 1rem;
+            margin: 0.5rem;
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            font-size: 1em;
+            background-color: black;
+            color: white;
+            border-radius: 5px;
+            
+            svg {
+                width: 25px;
+                height: 25px;
+                fill: red;
+            }
+            
+            &:hover {
+                transform: scale(1.1);
+            }
+        }
+
+        &__bookmarked {
+            display: flex;
+            align-items: center;
+            margin: 0.5rem;
+
+            svg {
+                width: 25px;
+                height: 25px;
+                fill:  #FFC300;
             }
         }
     }
